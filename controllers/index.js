@@ -34,6 +34,9 @@ document.querySelector("#btnDong").onclick = function () {
 // }
 var mangNhanVien = [];
 document.querySelector("#btnThemNV").onclick = function () {
+  pushNhanVien();
+};
+function pushNhanVien() {
   let d = new Date();
   let day = d.getDate();
   console.log(day);
@@ -46,30 +49,32 @@ document.querySelector("#btnThemNV").onclick = function () {
   nv.email = document.querySelector("#email").value;
   nv.password = document.querySelector("#password").value;
   nv.date = document.querySelector("#datepicker").value;
-  nv.luongCoBan = document.querySelector("#luongCB").value;
+  nv.luongCoBan = Number(document.querySelector("#luongCB").value);
   nv.chucVu = document.querySelector("#chucvu").value;
-  console.log("chưc vun ", nv.chucVu.innerHTML);
   nv.gioLam = document.querySelector("#gioLam").value;
-  console.log("ngày", nv.date);
+  // console.log("chưc vun ", nv.luongCoBan);
+
+  // console.log("ngày", nv.date);
   var ngay = nv.date.slice(3, 5);
 
   if (
-    nv.taiKhoan === "" ||
-    nv.hoten === "" ||
-    nv.email === "" ||
-    nv.password === "" ||
-    nv.luongCoBan === "" ||
-    nv.chucVu === "" ||
+    nv.taiKhoan === "" &&
+    nv.hoten === "" &&
+    nv.email === "" &&
+    nv.password === "" &&
+    nv.luongCoBan === 0 &&
+    nv.chucVu === "" &&
     nv.gioLam === ""
   ) {
     checkValidationID();
     checkValidationName();
     checkValidationEmail();
     checkValidationPasswords();
-    checkValidationDate();
+
     checkValidationLuong();
     checkValidationChucvu();
     checkValidationGioLam();
+    console.log("abc", nv);
 
     // kiemTraRongOnblur("#tknv", ".danger-id", "Tài khoản");
 
@@ -80,15 +85,39 @@ document.querySelector("#btnThemNV").onclick = function () {
     // kiemTraRongOnblur("#luongCB", ".danger-wage", "Lương cơ bản");
     // kiemTraRongOnblur("#chucvu", ".danger-permission", "Chức vụ");
     // kiemTraRongOnblur("#gioLam", ".danger-time", "Giờ làm");
-    if (nv.taiKhoan !== "") {
-      console.log("ngày", nv.taiKhoan);
+  } else if (
+    nv.hoten !== "" &&
+    nv.email !== "" &&
+    nv.password !== "" &&
+    nv.luongCoBan !== 0 &&
+    nv.chucVu !== "" &&
+    nv.gioLam !== ""
+  ) {
+    checkValidationName();
+    checkValidationEmail();
+    checkValidationPasswords();
+
+    checkValidationLuong();
+
+    checkValidationGioLam();
+    console.log("abcd", nv);
+    if (
+      nv.taiKhoan !== "" &&
+      kiemTraDoDai(nv.taiKhoan, ".danger-id", "Tài khoản", 4, 6) == true &&
+      kiemTraTatCaSo(nv.taiKhoan, ".danger-id", "Tài khoản") == true
+    ) {
+      console.log("abcde", nv);
+
       var maNvTruoc = [];
       var maNV = "";
+      // console.log("abc");
+      console.log("ngày 1", nv.taiKhoan);
 
       for (var i = 0; i < mangNhanVien.length; i++) {
         maNvTruoc.push(mangNhanVien[i].taiKhoan);
       }
-      console.log("ngàyM", maNvTruoc);
+      console.log("ngày 2", maNvTruoc);
+
       var count = 0;
       for (var i = 0; i < maNvTruoc.length; i++) {
         if (maNvTruoc[i] === nv.taiKhoan) {
@@ -99,79 +128,15 @@ document.querySelector("#btnThemNV").onclick = function () {
       if (count >= 1) {
         document.querySelector(".danger-id").innerHTML =
           "Tài khoản đã tồn tại trên hệ thống";
+      } else {
+        mangNhanVien.push(nv);
+        renderNhanVien(mangNhanVien);
+        luuLocalStorage();
+        document.getElementById("form").reset();
       }
-      //   if (nv.taiKhoan !== "") {
     }
-  } else if (
-    checkValidationID() == true &&
-    checkValidationName() == true &&
-    checkValidationEmail() == true &&
-    checkValidationPasswords() == true &&
-    checkValidationGioLam() == true &&
-    checkValidationLuong() == true
-  ) {
-    mangNhanVien.push(nv);
-    renderNhanVien(mangNhanVien);
-    luuLocalStorage();
   }
-  //     console.log("ngày", nv.taiKhoan);
-  //     var maNvTruoc = [];
-  //     var maNV = "";
-
-  //     for (var i = 0; i < mangNhanVien.length; i++) {
-  //       maNvTruoc.push(mangNhanVien[i].taiKhoan);
-  //     }
-  //     console.log("ngàyM", maNvTruoc);
-  //     var count = 0;
-  //     for (var i = 0; i < maNvTruoc.length; i++) {
-  //       if (maNvTruoc[i] === nv.taiKhoan) {
-  //         count++;
-  //       }
-  //     }
-  //     console.log("count", count);
-  //     if (count >= 1) {
-  //       document.querySelector(".danger-id").innerHTML =
-  //         "Tài khoản đã tồn tại trên hệ thống";
-  //     } else {
-  //       mangNhanVien.push(nv);
-  //       document.getElementById("form").reset();
-  //     }
-  //   }
-  // var iCapNhat = -1;
-  // for (var i = 0; i < mangNhanVien.length; i++) {
-  //   var nVien = mangNhanVien[i];
-  //   if (nVien.taiKhoan === taiKhoan) {
-  //     iCapNhat = i;
-  //   }
-  // }
-  // nVien = mangNhanVien[iCapNhat];
-  // console.log("mảng trước", nv.taiKhoan);
-
-  // document.querySelector("#btnThemNV").disabled = false;
-
-  //   console.log("mảng là ", mangNhanVien);
-
-  //   var trNhanVien = document.createElement("tr");
-  //   var tdTaiKhoan = document.createElement("td");
-  //   tdTaiKhoan.innerHTML = nv.taiKhoan;
-  //   trNhanVien.appendChild(tdTaiKhoan);
-  //   var tdHoTen = document.createElement("td");
-  //   tdHoTen.innerHTML = nv.hoten;
-  //   trNhanVien.appendChild(tdHoTen);
-  //   var tdEmail = document.createElement("td");
-  //   tdEmail.innerHTML = nv.email;
-
-  //   trNhanVien.appendChild(tdEmail);
-  //   var tdNgayLam = document.createElement("td");
-  //   tdNgayLam.innerHTML = nv.date;
-
-  //   trNhanVien.appendChild(tdNgayLam);
-  //   var tdChucVu = document.createElement("td");
-  //   tdChucVu.innerHTML = nv.chucVu;
-
-  //   trNhanVien.appendChild(tdChucVu);
-  //   document.querySelector("#tableDanhSach").appendChild(trNhanVien);
-};
+}
 function renderNhanVien(arrnv) {
   var html = "";
   for (var i = 0; i < arrnv.length; i++) {
@@ -286,7 +251,7 @@ function chinhSua(taiKhoan) {
     nv.email = document.querySelector("#email").value;
     nv.password = document.querySelector("#password").value;
     nv.date = document.querySelector("#datepicker").value;
-    nv.luongCoBan = document.querySelector("#luongCB").value;
+    nv.luongCoBan = Number(document.querySelector("#luongCB").value);
     nv.chucVu = document.querySelector("#chucvu").value;
     nv.gioLam = document.querySelector("#gioLam").value;
     // var iCapNhat = -1;
@@ -297,21 +262,55 @@ function chinhSua(taiKhoan) {
     //   }
     // }
 
-    mangNhanVien[iCapNhat].taiKhoan = nv.taiKhoan;
-    mangNhanVien[iCapNhat].hoten = nv.hoten;
-    mangNhanVien[iCapNhat].email = nv.email;
-    mangNhanVien[iCapNhat].password = nv.password;
-    mangNhanVien[iCapNhat].date = nv.date;
-    mangNhanVien[iCapNhat].luongCoBan = nv.luongCoBan;
-    mangNhanVien[iCapNhat].chucVu = nv.chucVu;
-    mangNhanVien[iCapNhat].gioLam = nv.gioLam;
-    console.log("ádsadasd", mangNhanVien[iCapNhat]);
-    luuLocalStorage();
-    renderNhanVien(mangNhanVien);
-    document.querySelector("#tknv").disabled = true;
+    if (
+      nv.hoten === "" &&
+      nv.email === "" &&
+      nv.password === "" &&
+      nv.luongCoBan === 0 &&
+      nv.chucVu === "" &&
+      nv.gioLam === ""
+    ) {
+      checkValidationName();
+      checkValidationEmail();
+      checkValidationPasswords();
 
-    document.querySelector("#btnThemNV").disabled = true;
-    // document.getElementById("form").reset();
+      checkValidationLuong();
+      checkValidationChucvu();
+      checkValidationGioLam();
+      console.log("abc", nv);
+    } else if (
+      nv.hoten !== "" &&
+      nv.email !== "" &&
+      nv.password !== "" &&
+      nv.luongCoBan !== 0 &&
+      nv.chucVu !== "" &&
+      nv.gioLam !== ""
+    ) {
+      checkValidationName();
+      checkValidationEmail();
+      checkValidationPasswords();
+
+      checkValidationLuong();
+
+      checkValidationGioLam();
+      console.log("abcd", nv);
+
+      mangNhanVien[iCapNhat].taiKhoan = nv.taiKhoan;
+      mangNhanVien[iCapNhat].hoten = nv.hoten;
+      mangNhanVien[iCapNhat].email = nv.email;
+      mangNhanVien[iCapNhat].password = nv.password;
+      mangNhanVien[iCapNhat].date = nv.date;
+      mangNhanVien[iCapNhat].luongCoBan = nv.luongCoBan;
+      mangNhanVien[iCapNhat].chucVu = nv.chucVu;
+      mangNhanVien[iCapNhat].gioLam = nv.gioLam;
+      console.log("ádsadasd", mangNhanVien[iCapNhat]);
+      luuLocalStorage();
+
+      renderNhanVien(mangNhanVien);
+      document.querySelector("#tknv").disabled = true;
+
+      document.querySelector("#btnThemNV").disabled = true;
+    }
   };
 }
 function luuLocalStorage() {
@@ -351,10 +350,8 @@ function checkValidationID() {
     if (kiemTraDoDai(maNV, ".danger-id", "Tài khoản", 4, 6) == true) {
       kiemTraTatCaSo(maNV, ".danger-id", "Tài khoản");
     }
-    return true;
   } else {
     kiemTraRongOnblur("#tknv", ".danger-id", "Tài khoản");
-    return false;
   }
 }
 document.querySelector("#tknv").onfocus = function () {
@@ -368,10 +365,8 @@ function checkValidationName() {
   var name = document.querySelector("#name").value;
   if (name.length > 0) {
     kiemTraTatChu(name, ".danger-name", "Họ và tên");
-    return true;
   } else {
     kiemTraRongOnblur("#name", ".danger-name", "Họ và tên");
-    return false;
   }
 }
 document.querySelector("#name").onfocus = function () {
@@ -384,10 +379,8 @@ function checkValidationEmail() {
   var email = document.querySelector("#email").value;
   if (email.length > 0) {
     kiemTraEmail(email, ".danger-email", "Email");
-    return true;
   } else {
     kiemTraRongOnblur("#email", ".danger-email", "Email");
-    return false;
   }
 }
 document.querySelector("#email").onfocus = function () {
@@ -398,15 +391,12 @@ document.querySelector("#password").onblur = function () {
 };
 function checkValidationPasswords() {
   var password = document.querySelector("#password").value;
-  if (password.length > 6) {
-    kiemTraDoDai(password, ".danger-password", "Password", 6, 10);
-    if (kiemTraDoDai(password, ".danger-password", "Password", 6, 10) == true) {
-      checkPassword(password, ".danger-password", "Password");
-    }
-    return true;
+  if (password.length < 6 && password.length > 10) {
+    checkPassword(password, ".danger-password", "Password");
+
+    console.log("pass", password);
   } else {
-    kiemTraRongOnblur("#password", ".danger-password", "Password");
-    return false;
+    kiemTraDoDai(password, ".danger-password", "Password", 6, 10);
   }
 }
 document.querySelector("#password").onfocus = function () {
@@ -436,11 +426,8 @@ function checkValidationLuong() {
   if (luong < 1000000 || luong > 20000000) {
     document.querySelector(".danger-wage").innerHTML =
       "Lương cơ bản không đúng !";
-    return false;
   } else if ((luong.length = 0)) {
     kiemTraRongOnblur("#luongCB", ".danger-wage", "Lương cơ bản");
-  } else {
-    return true;
   }
 }
 document.querySelector("#luongCB").onfocus = function () {
@@ -468,11 +455,8 @@ function checkValidationGioLam() {
   var gioLam = Number(document.querySelector("#gioLam").value);
   if (gioLam < 80 || gioLam > 200) {
     document.querySelector(".danger-time").innerHTML = "Giờ làm không đúng !";
-    return false;
   } else if ((gioLam.length = 0)) {
     kiemTraRongOnblur("#gioLam", ".danger-time", "Giờ làm");
-  } else {
-    return true;
   }
 }
 document.querySelector("#gioLam").onfocus = function () {
